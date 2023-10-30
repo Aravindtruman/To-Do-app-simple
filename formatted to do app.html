@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="to do app styles.css">
+    <link rel="icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/List-Icon.svg/2048px-List-Icon.svg.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Animated background elements -->
+        <div class="box">
+            <!-- Animated boxes -->
+            <div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <div class="contain2">
+            <!-- To-Do List Section -->
+            <div class="todoapp">
+                <h1> To-Do List</h1>
+                <div class="row">
+                    <input id="inputbox" type="text" placeholder="Add your Tasks">
+                    <button onclick="addTask()">Add</button>
+                </div>
+                <ul id="listcontainer">
+                    <!-- Task list goes here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Get references to HTML elements
+        var inputbox = document.getElementById("inputbox");
+        var list = document.getElementById("listcontainer");
+        const lightColors = ['#FFD700', '#87CEFA', '#98FB98', '#FFA07A', '#DDA0DD'];
+
+        // Function to add a new task
+    function addTask() {
+        if (inputbox.value === '') {
+            alert("You must write something");
+        } else {
+            let li = document.createElement("li");
+            li.innerHTML = inputbox.value;
+
+            // Select a random color from the lightColors array
+            const randomColor = lightColors[Math.floor(Math.random() * lightColors.length)];
+        
+            // Apply the random color as the background
+            li.style.backgroundColor = randomColor;
+
+            list.appendChild(li);
+            let span = document.createElement("span");
+            span.innerHTML = "<button>\u00d7</button>";
+            li.append(span);
+        }
+        inputbox.value = '';
+        saveData();
+    }
+
+
+        // Event listener for task completion and deletion
+        list.addEventListener("click", function (e) {
+         if (e.target.tagName === "LI") {
+            e.target.classList.toggle("checked"); 
+                if (e.target.classList.contains("checked")) {
+                    e.target.style.backgroundColor = "white"; // Change background color for checked tasks
+                } else {
+                  // If the task is unchecked, set the random background color
+                  const randomColor = lightColors[Math.floor(Math.random() * lightColors.length)];
+                  e.target.style.backgroundColor = randomColor;
+                }
+            saveData();
+         } else if (e.target.tagName === "BUTTON") {
+            e.target.parentElement.parentElement.remove();
+            saveData();
+            }
+        }, false);
+
+
+        // Function to save tasks in local storage
+        function saveData() {
+            localStorage.setItem("data", list.innerHTML);
+        }
+
+        // Function to show tasks on page load
+        function showTask() {
+            list.innerHTML = localStorage.getItem("data");
+        }
+
+        showTask();
+    </script>
+</body>
+</html>
